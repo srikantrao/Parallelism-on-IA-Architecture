@@ -1,0 +1,159 @@
+Intel(R) Advisor can now assist with vectorization and show optimization
+  report messages with your source code.
+See "https://software.intel.com/en-us/intel-advisor-xe" for details.
+
+Intel(R) C++ Intel(R) 64 Compiler for applications running on Intel(R) 64, Version 17.0.2.174 Build 20170213
+
+Compiler options: -c -qopt-report=5 -xMIC-AVX512 -qopenmp-simd -mkl -o diffusion.o
+
+    Report from: Interprocedural optimizations [ipo]
+
+  WHOLE PROGRAM (SAFE) [EITHER METHOD]: false
+  WHOLE PROGRAM (SEEN) [TABLE METHOD]: false
+  WHOLE PROGRAM (READ) [OBJECT READER METHOD]: false
+
+INLINING OPTION VALUES:
+  -inline-factor: 100
+  -inline-min-size: 30
+  -inline-max-size: 230
+  -inline-max-total-size: 2000
+  -inline-max-per-routine: 10000
+  -inline-max-per-compile: 500000
+
+In the inlining report below:
+   "sz" refers to the "size" of the routine. The smaller a routine's size,
+      the more likely it is to be inlined.
+   "isz" refers to the "inlined size" of the routine. This is the amount
+      the calling routine will grow if the called routine is inlined into it.
+      The compiler generally limits the amount a routine can grow by having
+      routines inlined into it.
+
+Begin optimization report for: diffusion(int, int, float, float, VSLStreamStatePtr)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (diffusion(int, int, float, float, VSLStreamStatePtr)) [1/1=100.0%] diffusion.cc(10,43)
+  -> EXTERN: (13,9) _vla_free(void *, long)
+  -> EXTERN: (13,9) _vla_alloc(long)
+  -> EXTERN: (17,9) _vla_free(void *, long)
+  -> EXTERN: (17,9) _vla_alloc(long)
+  -> EXTERN: (19,3) vsRngUniform(int, VSLStreamStatePtr, int, float *, float, float)
+  -> EXTERN: (26,15) dist_func(float, float)
+  -> EXTERN: (35,10) _vla_free(void *, long)
+  -> EXTERN: (35,10) _vla_free(void *, long)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at diffusion.cc(14,7)
+   remark #15388: vectorization support: reference x[$i1] has aligned access
+   remark #15305: vectorization support: vector length 16
+   remark #15399: vectorization support: unroll factor set to 2
+   remark #15300: LOOP WAS VECTORIZED
+   remark #15449: unmasked aligned unit stride stores: 1 
+   remark #15475: --- begin vector cost summary ---
+   remark #15476: scalar cost: 3 
+   remark #15477: vector cost: 0.180 
+   remark #15478: estimated potential speedup: 14.990 
+   remark #15488: --- end vector cost summary ---
+LOOP END
+
+LOOP BEGIN at diffusion.cc(14,7)
+<Remainder loop for vectorization>
+   remark #15388: vectorization support: reference x[$i1] has aligned access
+   remark #15305: vectorization support: vector length 8
+   remark #15309: vectorization support: normalized vectorization overhead 1.200
+   remark #15301: REMAINDER LOOP WAS VECTORIZED
+LOOP END
+
+LOOP BEGIN at diffusion.cc(22,3)
+   remark #25095: Loop Interchange not done due to: User Function Inside Loop Nest
+   remark #25451: Advice: Loop Interchange, if possible, might help loopnest. Suggested Permutation : ( 1 2 ) --> ( 2 1 ) 
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at diffusion.cc(24,5)
+      remark #15388: vectorization support: reference rn[j] has aligned access   [ diffusion.cc(26,32) ]
+      remark #15388: vectorization support: reference x[j] has aligned access   [ diffusion.cc(26,7) ]
+      remark #15388: vectorization support: reference x[j] has aligned access   [ diffusion.cc(26,7) ]
+      remark #15305: vectorization support: vector length 16
+      remark #15399: vectorization support: unroll factor set to 2
+      remark #15309: vectorization support: normalized vectorization overhead 0.002
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15448: unmasked aligned unit stride loads: 2 
+      remark #15449: unmasked aligned unit stride stores: 1 
+      remark #15475: --- begin vector cost summary ---
+      remark #15476: scalar cost: 110 
+      remark #15477: vector cost: 25.620 
+      remark #15478: estimated potential speedup: 4.020 
+      remark #15484: vector function calls: 1 
+      remark #15488: --- end vector cost summary ---
+      remark #15489: --- begin vector function matching report ---
+      remark #15490: Function call: dist_func(float, float) with simdlen=16, actual parameter types: (uniform,vector)   [ diffusion.cc(26,15) ]
+      remark #15492: A suitable vector variant was found (out of 2) with xmm, simdlen=4, unmasked, formal parameter types: (vector,vector)
+      remark #15493: --- end vector function matching report ---
+   LOOP END
+
+   LOOP BEGIN at diffusion.cc(24,5)
+   <Remainder loop for vectorization>
+      remark #15388: vectorization support: reference rn[j] has aligned access   [ diffusion.cc(26,32) ]
+      remark #15388: vectorization support: reference x[j] has aligned access   [ diffusion.cc(26,7) ]
+      remark #15388: vectorization support: reference x[j] has aligned access   [ diffusion.cc(26,7) ]
+      remark #15305: vectorization support: vector length 16
+      remark #15309: vectorization support: normalized vectorization overhead 0.035
+      remark #15301: REMAINDER LOOP WAS VECTORIZED
+   LOOP END
+LOOP END
+
+LOOP BEGIN at diffusion.cc(32,3)
+   remark #15305: vectorization support: vector length 16
+   remark #15399: vectorization support: unroll factor set to 8
+   remark #15309: vectorization support: normalized vectorization overhead 0.364
+   remark #15300: LOOP WAS VECTORIZED
+   remark #15448: unmasked aligned unit stride loads: 1 
+   remark #15475: --- begin vector cost summary ---
+   remark #15476: scalar cost: 12 
+   remark #15477: vector cost: 0.680 
+   remark #15478: estimated potential speedup: 13.130 
+   remark #15488: --- end vector cost summary ---
+LOOP END
+
+LOOP BEGIN at diffusion.cc(32,3)
+<Remainder loop for vectorization>
+   remark #15305: vectorization support: vector length 16
+   remark #15309: vectorization support: normalized vectorization overhead 2.316
+   remark #15301: REMAINDER LOOP WAS VECTORIZED
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+diffusion.cc(10,43):remark #34051: REGISTER ALLOCATION : [_Z9diffusioniiffPv] diffusion.cc:10
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   63[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm31 k0-k7]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   38[ rax rdx rcx rsi rdi r8-r15 zmm0-zmm17 k1-k7]
+        
+    Routine temporaries
+        Total         :     232
+            Global    :     110
+            Local     :     122
+        Regenerable   :      18
+        Spilled       :      25
+        
+    Routine stack
+        Variables     :       8 bytes*
+            Reads     :       1 [0.00e+00 ~ 0.0%]
+            Writes    :       1 [0.00e+00 ~ 0.0%]
+        Spills        :     344 bytes*
+            Reads     :      42 [3.19e+02 ~ 9.8%]
+            Writes    :      31 [1.27e+02 ~ 3.9%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
