@@ -1,0 +1,179 @@
+Intel(R) Advisor can now assist with vectorization and show optimization
+  report messages with your source code.
+See "https://software.intel.com/en-us/intel-advisor-xe" for details.
+
+Intel(R) C++ Intel(R) 64 Compiler for applications running on Intel(R) 64, Version 17.0.2.174 Build 20170213
+
+Compiler options: -c -qopenmp -qopt-report=5 -xMIC-AVX512 -c -o main.o
+
+    Report from: Interprocedural optimizations [ipo]
+
+  WHOLE PROGRAM (SAFE) [EITHER METHOD]: false
+  WHOLE PROGRAM (SEEN) [TABLE METHOD]: false
+  WHOLE PROGRAM (READ) [OBJECT READER METHOD]: false
+
+INLINING OPTION VALUES:
+  -inline-factor: 100
+  -inline-min-size: 30
+  -inline-max-size: 230
+  -inline-max-total-size: 2000
+  -inline-max-per-routine: 10000
+  -inline-max-per-compile: 500000
+
+In the inlining report below:
+   "sz" refers to the "size" of the routine. The smaller a routine's size,
+      the more likely it is to be inlined.
+   "isz" refers to the "inlined size" of the routine. This is the amount
+      the calling routine will grow if the called routine is inlined into it.
+      The compiler generally limits the amount a routine can grow by having
+      routines inlined into it.
+
+Begin optimization report for: main(int, char **)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (main(int, char **)) [1/3=33.3%] main.cc(23,33)
+  -> EXTERN: (27,3) printf(const char *, ...)
+  -> EXTERN: (28,3) printf(const char *, ...)
+  -> EXTERN: (28,93) fflush(FILE *)
+  -> EXTERN: (37,23) omp_get_wtime()
+  -> EXTERN: (38,22) ComputeIntegral(int, double, double)
+  -> EXTERN: (39,23) omp_get_wtime()
+  -> INLINE: (52,24) Accuracy(double, double, double) (isz = 13) (sz = 24)
+    -> EXTERN: (17,21) InverseDerivative(double)
+    -> EXTERN: (17,44) InverseDerivative(double)
+  -> EXTERN: (55,5) printf(const char *, ...)
+  -> EXTERN: (57,5) fflush(FILE *)
+  -> INLINE: (60,3) Stats(double &, double &) (isz = 10) (sz = 19)
+  -> INLINE: (61,3) Stats(double &, double &) (isz = 10) (sz = 19)
+  -> EXTERN: (62,3) printf(const char *, ...)
+  -> EXTERN: (63,3) printf(const char *, ...)
+  -> EXTERN: (65,3) printf(const char *, ...)
+  -> EXTERN: (66,3) printf(const char *, ...)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+
+Non-optimizable loops:
+
+
+LOOP BEGIN at main.cc(32,3)
+   remark #15532: loop was not vectorized: compile time constraints prevent loop optimization. Consider using -O3.
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+main.cc(23,33):remark #34051: REGISTER ALLOCATION : [main] main.cc:23
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   63[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm31 k0-k7]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   39[ rax rdx rcx rsi rdi r8 r12-r15 zmm0-zmm10 zmm16-zmm31 k1-k2]
+        
+    Routine temporaries
+        Total         :     190
+            Global    :      40
+            Local     :     150
+        Regenerable   :      48
+        Spilled       :      22
+        
+    Routine stack
+        Variables     :       4 bytes*
+            Reads     :       2 [0.00e+00 ~ 0.0%]
+            Writes    :       2 [0.00e+00 ~ 0.0%]
+        Spills        :     176 bytes*
+            Reads     :      31 [1.50e+02 ~ 15.4%]
+            Writes    :      26 [1.05e+02 ~ 10.8%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: Stats(double &, double &)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (Stats(double &, double &)) [2/3=66.7%] main.cc(11,39)
+
+
+    Report from: Code generation optimizations [cg]
+
+main.cc(11,39):remark #34051: REGISTER ALLOCATION : [_Z5StatsRdS_] main.cc:11
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   63[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm31 k0-k7]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   25[ rsi rdi zmm0-zmm5 zmm16-zmm31 k1]
+        
+    Routine temporaries
+        Total         :      49
+            Global    :       0
+            Local     :      49
+        Regenerable   :       4
+        Spilled       :       0
+        
+    Routine stack
+        Variables     :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+        Spills        :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: Accuracy(double, double, double)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (Accuracy(double, double, double)) [3/3=100.0%] main.cc(16,65)
+  -> EXTERN: (17,21) InverseDerivative(double)
+  -> EXTERN: (17,44) InverseDerivative(double)
+
+
+    Report from: Code generation optimizations [cg]
+
+main.cc(16,65):remark #34051: REGISTER ALLOCATION : [_Z8Accuracyddd] main.cc:16
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   63[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm31 k0-k7]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   16[ zmm0-zmm2 zmm16-zmm28]
+        
+    Routine temporaries
+        Total         :      37
+            Global    :      12
+            Local     :      25
+        Regenerable   :       1
+        Spilled       :       3
+        
+    Routine stack
+        Variables     :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+        Spills        :      24 bytes*
+            Reads     :       3 [3.00e+00 ~ 7.1%]
+            Writes    :       3 [3.00e+00 ~ 7.1%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================

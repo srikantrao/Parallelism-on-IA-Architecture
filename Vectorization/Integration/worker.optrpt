@@ -1,0 +1,98 @@
+Intel(R) Advisor can now assist with vectorization and show optimization
+  report messages with your source code.
+See "https://software.intel.com/en-us/intel-advisor-xe" for details.
+
+Intel(R) C++ Intel(R) 64 Compiler for applications running on Intel(R) 64, Version 17.0.2.174 Build 20170213
+
+Compiler options: -c -qopenmp -qopt-report=5 -xMIC-AVX512 -c -o worker.o
+
+    Report from: Interprocedural optimizations [ipo]
+
+  WHOLE PROGRAM (SAFE) [EITHER METHOD]: false
+  WHOLE PROGRAM (SEEN) [TABLE METHOD]: false
+  WHOLE PROGRAM (READ) [OBJECT READER METHOD]: false
+
+INLINING OPTION VALUES:
+  -inline-factor: 100
+  -inline-min-size: 30
+  -inline-max-size: 230
+  -inline-max-total-size: 2000
+  -inline-max-per-routine: 10000
+  -inline-max-per-compile: 500000
+
+In the inlining report below:
+   "sz" refers to the "size" of the routine. The smaller a routine's size,
+      the more likely it is to be inlined.
+   "isz" refers to the "inlined size" of the routine. This is the amount
+      the calling routine will grow if the called routine is inlined into it.
+      The compiler generally limits the amount a routine can grow by having
+      routines inlined into it.
+
+Begin optimization report for: ComputeIntegral(int, double, double)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (ComputeIntegral(int, double, double)) [1/1=100.0%] worker.cc(3,69)
+  -> EXTERN: (12,26) BlackBoxFunction(double)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at worker.cc(9,3)
+   remark #15305: vectorization support: vector length 8
+   remark #15399: vectorization support: unroll factor set to 2
+   remark #15309: vectorization support: normalized vectorization overhead 0.036
+   remark #15301: OpenMP SIMD LOOP WAS VECTORIZED
+   remark #15475: --- begin vector cost summary ---
+   remark #15476: scalar cost: 115 
+   remark #15477: vector cost: 52.250 
+   remark #15478: estimated potential speedup: 2.050 
+   remark #15484: vector function calls: 1 
+   remark #15487: type converts: 1 
+   remark #15488: --- end vector cost summary ---
+   remark #15489: --- begin vector function matching report ---
+   remark #15490: Function call: BlackBoxFunction(double) with simdlen=8, actual parameter types: (vector)   [ worker.cc(12,26) ]
+   remark #15492: A suitable vector variant was found (out of 2) with xmm, simdlen=2, unmasked, formal parameter types: (vector)
+   remark #15493: --- end vector function matching report ---
+LOOP END
+
+LOOP BEGIN at worker.cc(9,3)
+<Remainder loop for vectorization>
+   remark #15305: vectorization support: vector length 8
+   remark #15309: vectorization support: normalized vectorization overhead 0.098
+   remark #15301: REMAINDER LOOP WAS VECTORIZED
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+worker.cc(3,69):remark #34051: REGISTER ALLOCATION : [_Z15ComputeIntegralidd] worker.cc:3
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   63[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm31 k0-k7]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   31[ rax rdx rcx rbx rdi r12-r13 r15 zmm0-zmm14 zmm16-zmm21 k1-k2]
+        
+    Routine temporaries
+        Total         :     158
+            Global    :      69
+            Local     :      89
+        Regenerable   :       8
+        Spilled       :      18
+        
+    Routine stack
+        Variables     :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+        Spills        :     680 bytes*
+            Reads     :      31 [1.26e+02 ~ 18.3%]
+            Writes    :      27 [5.71e+01 ~ 8.3%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
